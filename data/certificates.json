@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "title": "Web Development",
+    "file": "/certificates/web-dev.pdf"
+  },
+  {
+    "id": "2",
+    "title": "UI/UX Design",
+    "file": "/certificates/ui-ux.pdf"
+  }
+]

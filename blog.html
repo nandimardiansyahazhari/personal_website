@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Blog Saya</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f9f9f9; color: #333; }
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .logo { font-size: 1.4rem; font-weight: bold; }
+        .nav-links { list-style: none; display: flex; gap: 1.5rem; }
+        .nav-links a { color: #333; font-weight: 500; text-decoration: none; }
+        .nav-links a:hover { color: #3498db; }
+
+        .blog-header { text-align: center; padding: 4rem 1rem 2rem; }
+        .blog-header h1 { font-size: 2.2rem; color: #333; }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 0 1rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .blog-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        .blog-card:hover { transform: translateY(-5px); }
+        .blog-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .blog-content { padding: 1.5rem; }
+        .blog-content h3 { margin: 0 0 0.75rem; font-size: 1.4rem; color: #2c3e50; }
+        .blog-date { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 1rem; display: block; }
+        .blog-excerpt, .blog-full {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        .blog-full { display: none; } /* Sembunyikan konten penuh */
+        .read-more, .read-less {
+            display: inline-block;
+            color: #3498db;
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 1rem;
+        }
+        .read-more:hover, .read-less:hover {
+            text-decoration: underline;
+        }
+        .no-blogs {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Nama Anda</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="blog.html" style="color:#3498db;">Blog</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="blog-header">
+        <h1>Blog Saya</h1>
+        <p>Temukan tulisan terbaru tentang teknologi, desain, dan pengembangan diri.</p>
+    </section>
+
+    <div class="blog-grid" id="blog-container">
+        <!-- Blog akan dimuat di sini -->
+    </div>
+
+    <script>
+        async function loadBlogs() {
+            try {
+                const res = await fetch('/data/blog.json');
+                const blogs = await res.json();
+                const container = document.getElementById('blog-container');
+
+                if (blogs.length === 0) {
+                    container.innerHTML = '<div class="no-blogs">Belum ada blog.</div>';
+                    return;
+                }
+
+                container.innerHTML = blogs.map(blog => `
+                    <div class="blog-card">
+                        ${blog.thumbnail ? `<img src="${blog.thumbnail}" alt="${blog.title}">` : ''}
+                        <div class="blog-content">
+                            <span class="blog-date">${new Date(blog.date).toLocaleDateString('id-ID')}</span>
+                            <h3>${blog.title}</h3>
+                            <div class="blog-excerpt" id="excerpt-${blog.id}">
+                                ${blog.content.substring(0, 120)}...
+                            </div>
+                            <div class="blog-full" id="full-${blog.id}" style="display:none;">
+                                ${blog.content}
+                            </div>
+                            <button class="read-more" onclick="toggleBlog('${blog.id}')">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                document.getElementById('blog-container').innerHTML = 
+                    '<div class="no-blogs">Gagal memuat blog.</div>';
+            }
+        }
+
+        function toggleBlog(id) {
+            const excerpt = document.getElementById(`excerpt-${id}`);
+            const full = document.getElementById(`full-${id}`);
+            const button = event.target;
+
+            if (full.style.display === "none") {
+                excerpt.style.display = "none";
+                full.style.display = "block";
+                button.textContent = "Tutup";
+            } else {
+                excerpt.style.display = "block";
+                full.style.display = "none";
+                button.textContent = "Baca Selengkapnya →";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadBlogs);
+    </script>
+</body>
+</html>

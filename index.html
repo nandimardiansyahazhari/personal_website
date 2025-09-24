@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Website</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Nandi Mardiansyah Azhari</div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#portofolio">Portofolio</a> </li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="blog.html">Blog</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Hallo, I'am <strong>Nandi</strong></h1>
+        <p>Electronics Engineering</p>
+        <div class="hero-buttons">
+            <a href="#portofolio" class="btn">Lihat Portofolio</a>
+            <a href="assets/sv/cv.pdf" class="btn btn-outline">ATS Friendly</a>
+            <a href="blog.html" class="btn">Baca Blog Saya</a>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>About Me</h2>
+        <p>I am currently a final-year student of the Bachelor of Applied Science in Electronics Engineering program at
+Politeknik Elektronika Negeri Surabaya. I possess expertise in electronics, with a focus on weak currents. I
+possess a strong interest in and extensive experience with mobile phones, computers, and other electronic
+devices. I possess knowledge in the field of programming.</p>
+    </section>
+
+    <section id="certificates" class="certificates">
+        <h2>Sertifikat</h2>
+        <div class="carousel-container">
+            <button class="carousel-btn prev" aria-label="Previous">&#8249;</button>
+            <div class="carousel-track" id="cert-carousel">
+                <!-- Sertifikat akan dimuat di sini -->
+            </div>
+            <button class="carousel-btn next" aria-label="Next">&#8250;</button>
+        </div>
+    </section>
+
+    <section id="portofolio" class="portfolio">
+        <h2>Portofolio</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <img src="assets/images/project1.jpg" alt="Project 1">
+                <h3>Project Satu</h3>
+                <p>Deskripsi singkat project satu.</p>
+            </div>
+            <div class="portfolio-item">
+                <img src="assets/images/project2.jpg" alt="Project 2">
+                <h3>Project Dua</h3>
+                <p>Deskripsi singkat project dua.</p>
+            </div>
+            <div class="portfolio-item">
+                <img src="assets/images/project3.jpg" alt="Project 3">
+                <h3>Project Tiga</h3>
+                <p>Deskripsi singkat project tiga.</p>
+            </div>
+                        <div class="portfolio-item">
+                <img src="assets/images/project1.jpg" alt="Project 1">
+                <h3>Project Satu</h3>
+                <p>Deskripsi singkat project satu.</p>
+            </div>
+            <div class="portfolio-item">
+                <img src="assets/images/project2.jpg" alt="Project 2">
+                <h3>Project Dua</h3>
+                <p>Deskripsi singkat project dua.</p>
+            </div>
+            <div class="portfolio-item">
+                <img src="assets/images/project3.jpg" alt="Project 3">
+                <h3>Project Tiga</h3>
+                <p>Deskripsi singkat project tiga.</p>
+            </div>
+        </div>
+    </section>
+
+        <section id="contact" class="contact">
+        <h2>Contact Me</h2>
+        <p>Email: <a href="mailto:nandimardiansyahazhari@proton.me">nandimardiansyahazhari@proton.me</a></p>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/nandi-mardiansyah-azhari-229a232aa/">LinkedIn</a>
+            <a href="https://github.com/nandimardiansyahazhari">GitHub</a>
+            <a href="https://www.instagram.com/ansyah_azhari/">Instagram</a>
+        </div>
+    </section>
+        <footer>
+            <p>&copy; 2025 Nandi Mardiansyah Azhari. All right reserved.</p>
+        </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Muat sertifikat
+            async function loadCertificates() {
+                try {
+                    const res = await fetch('/data/certificates.json');
+                    const certs = await res.json();
+                    const container = document.getElementById('cert-carousel');
+                    
+                    if (certs.length === 0) {
+                        container.innerHTML = '<p style="text-align:center; width:100%;">Belum ada sertifikat.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = certs.map(cert => `
+                        <div class="cert-card">
+                            <h3>${cert.title}</h3>
+                            <a href="${cert.file}" target="_blank" rel="noopener noreferrer">Lihat Sertifikat</a>
+                        </div>
+                    `).join('');
+                    
+                    initCarousel();
+                } catch (e) {
+                    console.error("Gagal memuat sertifikat:", e);
+                }
+            }
+
+            // Inisialisasi carousel
+            function initCarousel() {
+                const track = document.getElementById('cert-carousel');
+                const prevBtn = document.querySelector('.carousel-btn.prev');
+                const nextBtn = document.querySelector('.carousel-btn.next');
+                let position = 0;
+                const cardWidth = 280 + 24; // width + gap (280px + 1.5rem ≈ 24px)
+
+                // Hitung jumlah kartu
+                const totalCards = track.children.length;
+                const visibleCards = Math.floor(track.offsetWidth / cardWidth);
+
+                // Nonaktifkan tombol jika tidak cukup kartu
+                if (totalCards <= visibleCards) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                    return;
+                }
+
+                nextBtn.addEventListener('click', () => {
+                    const maxPosition = -(totalCards - visibleCards) * cardWidth;
+                    if (position > maxPosition) {
+                        position -= cardWidth;
+                        track.style.transform = `translateX(${position}px)`;
+                    }
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    if (position < 0) {
+                        position += cardWidth;
+                        track.style.transform = `translateX(${position}px)`;
+                    }
+                });
+            }
+
+            loadCertificates();
+        });
+        </script>
+</body>
+</html>
