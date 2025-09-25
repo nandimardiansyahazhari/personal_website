@@ -74,21 +74,22 @@
 <body>
     <header>
         <nav>
-            <div class="logo">Nama Anda</div>
+            <div class="logo">Ansyah</div>
             <ul class="nav-links">
-                <li><a href="index.html">Beranda</a></li>
+                <li><a href="index.html">Menu</a></li>
                 <li><a href="blog.html" style="color:#3498db;">Blog</a></li>
             </ul>
         </nav>
     </header>
 
     <section class="blog-header">
-        <h1>Blog Saya</h1>
-        <p>Temukan tulisan terbaru tentang teknologi, desain, dan pengembangan diri.</p>
+        <h1>My Blog</h1>
+        <p>This is where i can share some of my daily thing and experience, 
+            especially on my working adnd project. Thanks For reading :)</p>
     </section>
 
     <div class="blog-grid" id="blog-container">
-        <!-- Blog akan dimuat di sini -->
+
     </div>
 
     <script>
@@ -116,14 +117,14 @@
                                 ${blog.content}
                             </div>
                             <button class="read-more" onclick="toggleBlog('${blog.id}')">
-                                Baca Selengkapnya →
+                                Read More
                             </button>
                         </div>
                     </div>
                 `).join('');
             } catch (e) {
                 document.getElementById('blog-container').innerHTML = 
-                    '<div class="no-blogs">Gagal memuat blog.</div>';
+                    '<div class="no-blogs">Failed to Connect Blog.</div>';
             }
         }
 
@@ -135,11 +136,11 @@
             if (full.style.display === "none") {
                 excerpt.style.display = "none";
                 full.style.display = "block";
-                button.textContent = "Tutup";
+                button.textContent = "Close";
             } else {
                 excerpt.style.display = "block";
                 full.style.display = "none";
-                button.textContent = "Baca Selengkapnya →";
+                button.textContent = "Read More →";
             }
         }
 
